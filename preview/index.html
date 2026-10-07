@@ -407,10 +407,14 @@
       'use strict';
       document.documentElement.classList.add('js');
 
-      /* Video loops rendered with HyperFrames. Apps Script cannot host video files,
-         so set MEDIA_BASE to the public folder URL that holds the three MP4 files.
-         With an empty value the page shows its gradient scenes and loads no video. */
-      const MEDIA_BASE = '../site/media/';
+      /* The same file runs in two places: on the public domain (GitHub Pages) and
+         inside the Apps Script web app. Apps Script cannot host video files, so
+         there the videos come from jsDelivr. */
+      const onAppsScript = !!(window.google && google.script && google.script.run);
+      const MEDIA_BASE = onAppsScript
+        ? 'https://cdn.jsdelivr.net/gh/almanalaysay93-gif/mindanow-site@9ac5909df72596ab59af2d3613f22b25433251f3/site/media/'
+        : '../site/media/';
+      const REGISTER_URL = 'https://script.google.com/macros/s/AKfycbwQc6wNsjoVC4wOFKj4p5ddaJuJfywASpprKMi1GLJgrApy2qitZnGLQlssmXs4ptVO/exec';
       const LOOPS = { hero: 'hero-loop.mp4', program: 'program-loop.mp4', register: 'register-loop.mp4' };
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -636,10 +640,6 @@
       form.addEventListener('submit', function (event) {
         event.preventDefault();
         if (submitting || !form.reportValidity()) return;
-        if (!(window.google && google.script && google.script.run)) {
-          showResult('preview', 'Preview only', 'This preview does not save registrations or send emails. Use the published event page to register.');
-          return;
-        }
         const payload = {};
         ['firstName','lastName','email','phone','profession','institution','city','website'].forEach(function (name) {
           payload[name] = form.elements[name].value.trim();
@@ -647,7 +647,7 @@
         payload.consent = form.elements.consent.checked;
         result.hidden = true;
         busy(true);
-        google.script.run.withSuccessHandler(function (response) {
+        function onResponse(response) {
           busy(false);
           if (!response || response.ok !== true) {
             showResult('error','Registration could not be confirmed','Please try again. If the problem continues, contact almanalaysay93@gmail.com.');
@@ -661,10 +661,26 @@
             showResult('', 'Your registration is saved', 'Your confirmation email is pending. Keep the reference below. Contact the organizer if your email does not arrive.', response.reference);
           }
           form.reset();
-        }).withFailureHandler(function () {
+        }
+        function onFailure() {
           busy(false);
           showResult('error', 'We could not confirm your registration', 'Check your connection, then try again with the same email address. Contact almanalaysay93@gmail.com if you need help.');
-        }).registerGuest(payload);
+        }
+        if (onAppsScript) {
+          google.script.run.withSuccessHandler(onResponse).withFailureHandler(onFailure).registerGuest(payload);
+          return;
+        }
+        /* On the public domain the page posts to the Apps Script web app. A text/plain
+           body keeps the request simple, so the browser sends no preflight request. */
+        fetch(REGISTER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+          redirect: 'follow'
+        }).then(function (reply) {
+          if (!reply.ok) throw new Error('HTTP ' + reply.status);
+          return reply.json();
+        }).then(onResponse).catch(onFailure);
       });
     })();
   </script>

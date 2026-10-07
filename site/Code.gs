@@ -13,6 +13,18 @@ function doGet() {
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
+// The page on the public domain posts the registration here as JSON text.
+// The reply never includes an error detail, so a caller learns nothing about the sheet.
+function doPost(e) {
+  let reply;
+  try {
+    reply = registerGuest(JSON.parse(e.postData.contents));
+  } catch (error) {
+    reply = { ok: false };
+  }
+  return ContentService.createTextOutput(JSON.stringify(reply)).setMimeType(ContentService.MimeType.JSON);
+}
+
 // Only this registration action is exposed to the HTML client.
 function registerGuest(payload) {
   const guest = validate_(payload);
