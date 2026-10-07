@@ -45,17 +45,20 @@ function registerGuest(payload) {
     sheet.appendRow(row.map(safeCell_));
     SpreadsheetApp.flush();
     const rowNumber = sheet.getLastRow();
-    // The reply does not wait for email. A one-time trigger sends the two emails about a minute later.
+    // The participant email goes out before the reply. The organizer alert waits for a one-time
+    // trigger, about a minute later, so the reply is not held for a second email.
     // A saved registration stays successful even when the trigger or the mail fails.
-    if (queueEmailRun_()) return { ok: true, reference: reference, emailStatus: 'queued' };
-    try { deliver_(sheet, rowNumber, row); } catch (error) { console.warn('Email queue remains pending.'); }
+    try { deliver_(sheet, rowNumber, row, GUEST_EMAIL_COLUMN_); } catch (error) { console.warn('Email queue remains pending.'); }
+    if (!queueEmailRun_()) {
+      try { deliver_(sheet, rowNumber, row); } catch (error) { console.warn('Email queue remains pending.'); }
+    }
     return { ok: true, reference: reference, emailStatus: row[11] === 'sent' ? 'sent' : 'pending' };
   } finally {
     lock.releaseLock();
   }
 }
 
-// Schedules one email run. Returns false when it cannot, and the caller then sends the email at once.
+// Schedules one email run. Returns false when it cannot, and the caller then sends every email at once.
 // The hourly retry trigger still covers every row that stays pending.
 function queueEmailRun_() {
   try {
@@ -78,7 +81,8 @@ function sendQueuedEmails_() {
   ScriptApp.getProjectTriggers().forEach(function (trigger) {
     if (trigger.getHandlerFunction() === 'sendQueuedEmails_') ScriptApp.deleteTrigger(trigger);
   });
-  retryPendingEmails_();
+  // Wait for a registration that holds the lock, or this run would end with the alert unsent.
+  runPendingEmails_(20000);
 }
 
 function validate_(payload) {
@@ -149,7 +153,11 @@ function setup_() {
   } finally { lock.releaseLock(); }
 }
 
-function deliver_(sheet, rowNumber, row) {
+// Zero-based position of the "Guest email" status in a row.
+const GUEST_EMAIL_COLUMN_ = 11;
+
+// Sends the emails of one row that are not sent yet. With onlyColumn, sends that one email only.
+function deliver_(sheet, rowNumber, row, onlyColumn) {
   const guestEmail = raw_(row[4]);
   const name = raw_(row[2]) + ' ' + raw_(row[3]);
   const details = 'Reference: ' + row[1] + '\nName: ' + name + '\nProfession: ' + raw_(row[6]) +
@@ -168,6 +176,7 @@ function deliver_(sheet, rowNumber, row) {
   let note = '';
   messages.forEach(function (message) {
     if (row[message.column] === 'sent') return;
+    if (onlyColumn !== undefined && message.column !== onlyColumn) return;
     try {
       if (MailApp.getRemainingDailyQuota() < 1) { note = 'Pending: email quota. Automatic retry is scheduled.'; return; }
       if (!attempted) { row[13] = new Date(); row[14] = Number(row[14] || 0) + 1; attempted = true; }
@@ -187,8 +196,12 @@ function deliver_(sheet, rowNumber, row) {
 }
 
 function retryPendingEmails_() {
+  runPendingEmails_(1000);
+}
+
+function runPendingEmails_(lockWaitMs) {
   const lock = LockService.getScriptLock();
-  if (!lock.tryLock(1000)) return;
+  if (!lock.tryLock(lockWaitMs)) return;
   try {
     const sheet = sheet_();
     if (sheet.getLastRow() < 2) return;
