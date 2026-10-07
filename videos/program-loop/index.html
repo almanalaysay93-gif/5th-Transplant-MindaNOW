@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=640" />
+    <title>MindaNOW program loop</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --sky-top: #c9e3f6;
+        --sky-low: #fdf3dc;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 640px;
+        overflow: hidden;
+        background: #eef6fb;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, var(--sky-top) 0%, #eef6fb 52%, var(--sky-low) 74%);
+      }
+      #art {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 640px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-width="1920"
+      data-height="640"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="12" data-track-index="0">
+        <svg id="art" data-layout-allow-overflow="true" viewBox="0 0 1920 640" aria-hidden="true">
+          <defs>
+            <radialGradient id="p-sun">
+              <stop offset="0" stop-color="#fffdf2" />
+              <stop offset="0.3" stop-color="#ffeebc" stop-opacity="0.8" />
+              <stop offset="1" stop-color="#ffeebc" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="p-apo" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#5f8fc0" />
+              <stop offset="0.55" stop-color="#9dc0de" />
+              <stop offset="1" stop-color="#dcebf5" />
+            </linearGradient>
+            <linearGradient id="p-range" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#8fb6d6" />
+              <stop offset="1" stop-color="#e3eff7" />
+            </linearGradient>
+            <linearGradient id="p-hill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#4f93a6" />
+              <stop offset="1" stop-color="#8fc1c4" />
+            </linearGradient>
+            <linearGradient id="p-water" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#7fbfe6" />
+              <stop offset="0.6" stop-color="#cfe8f7" />
+              <stop offset="1" stop-color="#ffffff" />
+            </linearGradient>
+            <linearGradient id="p-blue" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#0b3a78" />
+              <stop offset="0.3" stop-color="#2f8fd8" />
+              <stop offset="0.52" stop-color="#a9dcf7" />
+              <stop offset="0.76" stop-color="#1c6fc0" />
+              <stop offset="1" stop-color="#0b3a78" />
+            </linearGradient>
+            <linearGradient id="p-gold" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#b07f28" />
+              <stop offset="0.3" stop-color="#f6e2a6" />
+              <stop offset="0.52" stop-color="#fff7da" />
+              <stop offset="0.76" stop-color="#d1a044" />
+              <stop offset="1" stop-color="#a87522" />
+            </linearGradient>
+            <linearGradient id="p-fade" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0" />
+              <stop offset="1" stop-color="#ffffff" stop-opacity="1" />
+            </linearGradient>
+            <filter id="p-cloud" x="-20%" y="-40%" width="140%" height="180%">
+              <feGaussianBlur stdDeviation="12" />
+            </filter>
+            <path id="p-spark" d="M0 -16 C1.6 -4 4 -1.6 16 0 C4 1.6 1.6 4 0 16 C-1.6 4 -4 1.6 -16 0 C-4 -1.6 -1.6 -4 0 -16Z" />
+          </defs>
+
+          <circle id="sun" cx="560" cy="250" r="300" fill="url(#p-sun)" />
+
+          <path d="M700 430 L880 372 L1000 396 L1130 330 L1230 280 L1330 196 L1392 150 L1432 138 L1470 156 L1540 214 L1650 290 L1760 330 L1920 380 V470 H700Z" fill="url(#p-apo)" />
+          <path d="M1362 172 L1392 150 L1432 138 L1470 156 L1500 182 L1462 176 L1440 190 L1416 172 L1390 186Z" fill="#f4f9fd" opacity="0.85" />
+          <path d="M0 440 L160 404 L330 420 L520 380 L700 410 L900 392 L1080 420 L1300 400 L1520 424 L1740 398 L1920 420 V480 H0Z" fill="url(#p-range)" opacity="0.9" />
+
+          <g id="p-clouds" filter="url(#p-cloud)" fill="#ffffff">
+            <g class="cloud" data-amp="40" data-ph="0" opacity="0.92">
+              <ellipse cx="1180" cy="120" rx="190" ry="34" />
+              <ellipse cx="1250" cy="96" rx="100" ry="36" />
+            </g>
+            <g class="cloud" data-amp="30" data-ph="0.4" opacity="0.85">
+              <ellipse cx="1700" cy="210" rx="170" ry="26" />
+              <ellipse cx="1420" cy="250" rx="210" ry="18" />
+            </g>
+            <g class="cloud" data-amp="36" data-ph="0.7" opacity="0.8">
+              <ellipse cx="240" cy="110" rx="200" ry="30" />
+              <ellipse cx="820" cy="190" rx="150" ry="20" />
+            </g>
+          </g>
+
+          <path d="M0 470 L120 446 L300 458 L470 436 L640 462 L760 470 H0Z" fill="url(#p-hill)" opacity="0.85" />
+          <path d="M1500 470 L1640 440 L1790 452 L1920 432 V470Z" fill="url(#p-hill)" opacity="0.85" />
+
+          <g id="city" fill="#f7fbfe" stroke="#b9d3e6" stroke-width="1.5">
+            <rect x="820" y="418" width="34" height="52" />
+            <rect x="860" y="396" width="26" height="74" />
+            <rect x="892" y="430" width="44" height="40" />
+            <rect x="944" y="372" width="30" height="98" />
+            <rect x="980" y="408" width="40" height="62" />
+            <rect x="1028" y="350" width="36" height="120" />
+            <rect x="1070" y="390" width="52" height="80" />
+            <rect x="1130" y="424" width="38" height="46" />
+            <rect x="1176" y="402" width="28" height="68" />
+            <rect x="1212" y="436" width="50" height="34" />
+          </g>
+          <g id="windows" fill="#9cc3df" opacity="0.6">
+            <rect x="950" y="382" width="18" height="3" />
+            <rect x="950" y="394" width="18" height="3" />
+            <rect x="950" y="406" width="18" height="3" />
+            <rect x="950" y="418" width="18" height="3" />
+            <rect x="1034" y="362" width="24" height="3" />
+            <rect x="1034" y="376" width="24" height="3" />
+            <rect x="1034" y="390" width="24" height="3" />
+            <rect x="1034" y="404" width="24" height="3" />
+            <rect x="1034" y="418" width="24" height="3" />
+            <rect x="1078" y="402" width="36" height="3" />
+            <rect x="1078" y="416" width="36" height="3" />
+            <rect x="1078" y="430" width="36" height="3" />
+          </g>
+
+          <rect x="0" y="470" width="1920" height="170" fill="url(#p-water)" />
+          <g id="ripples" fill="none" stroke="#ffffff" stroke-linecap="round"></g>
+
+          <g id="bridge">
+            <g stroke="#e9f2f9" stroke-width="2" opacity="0.95">
+              <path d="M1640 296 L1400 468 M1640 312 L1450 468 M1640 328 L1500 468 M1640 344 L1550 468 M1640 360 L1596 468" />
+              <path d="M1640 296 L1880 468 M1640 312 L1830 468 M1640 328 L1780 468 M1640 344 L1730 468 M1640 360 L1684 468" />
+            </g>
+            <path d="M1628 286 H1652 L1660 520 H1620Z" fill="#f7fbfe" stroke="#b9d3e6" stroke-width="1.5" />
+            <rect x="1340" y="466" width="580" height="10" fill="#f7fbfe" stroke="#b9d3e6" stroke-width="1.5" />
+            <rect x="1440" y="476" width="14" height="38" fill="#e3eef6" />
+            <rect x="1826" y="476" width="14" height="38" fill="#e3eef6" />
+          </g>
+
+          <g id="birds" fill="none" stroke="#0b3a78" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+            <path class="bird" data-x="980" data-y="200" data-s="1" data-ph="0" />
+            <path class="bird" data-x="1050" data-y="232" data-s="0.7" data-ph="0.22" />
+            <path class="bird" data-x="910" data-y="238" data-s="0.6" data-ph="0.47" />
+          </g>
+
+          <path id="pr-blue" fill="url(#p-blue)" />
+          <path id="pr-gold" fill="url(#p-gold)" />
+          <path id="pr-gold-hi" fill="none" stroke="#fffbe8" stroke-width="2" stroke-opacity="0.8" />
+
+          <g id="p-sparks" fill="#fffdf2"></g>
+          <rect x="0" y="520" width="1920" height="120" fill="url(#p-fade)" />
+        </svg>
+      </div>
+    </div>
+    <script>
+      const TAU = Math.PI * 2;
+      const W = 1920;
+      const SVG = "http://www.w3.org/2000/svg";
+
+      const ribbons = [
+        { id: "pr-blue", y: 548, tilt: -0.012, amp: 26, k: 0.0036, ph: 0.6, sp: 1, w: 16, wk: 0.0042, wph: 0.4, wsp: -1 },
+        { id: "pr-gold", hi: "pr-gold-hi", y: 566, tilt: -0.01, amp: 22, k: 0.0031, ph: 2.9, sp: -1, w: 9, wk: 0.005, wph: 1.6, wsp: 1 },
+      ];
+      ribbons.forEach((r) => {
+        r.el = document.getElementById(r.id);
+        r.hiEl = r.hi ? document.getElementById(r.hi) : null;
+      });
+      function drawRibbon(r, p) {
+        const top = [];
+        const bottom = [];
+        for (let x = -60; x <= W + 60; x += 24) {
+          const yc = r.y + r.tilt * x + r.amp * Math.sin(r.k * x + r.ph + TAU * r.sp * p);
+          const half = r.w * (0.56 + 0.44 * Math.sin(r.wk * x + r.wph + TAU * r.wsp * p));
+          top.push(x.toFixed(1) + " " + (yc - half).toFixed(1));
+          bottom.push(x.toFixed(1) + " " + (yc + half).toFixed(1));
+        }
+        r.el.setAttribute("d", "M" + top.join(" L") + " L" + bottom.reverse().join(" L") + "Z");
+        if (r.hiEl) r.hiEl.setAttribute("d", "M" + top.join(" L"));
+      }
+
+      // Water shimmer: short bright dashes that slide one dash period per loop.
+      const rippleLayer = document.getElementById("ripples");
+      const rippleData = [
+        [482, 3, 120, 260, 1, 0.75], [494, 2.5, 90, 300, -1, 0.6], [508, 3, 150, 340, 1, 0.55],
+        [524, 2, 110, 280, -1, 0.5], [542, 2.5, 170, 380, 1, 0.42],
+      ];
+      const ripples = rippleData.map((d) => {
+        const line = document.createElementNS(SVG, "path");
+        line.setAttribute("d", "M-400 " + d[0] + " H2320");
+        line.setAttribute("stroke-width", d[1]);
+        line.setAttribute("stroke-dasharray", d[2] + " " + d[3]);
+        line.setAttribute("stroke-opacity", d[5]);
+        rippleLayer.appendChild(line);
+        return { el: line, period: d[2] + d[3], dir: d[4] };
+      });
+
+      const sparkData = [
+        [520, 150, 0.7, 0.0, 2], [700, 300, 0.5, 0.4, 3], [1500, 110, 0.6, 0.7, 2], [1760, 300, 0.5, 0.2, 3],
+        [320, 330, 0.45, 0.55, 2], [1180, 560, 0.5, 0.85, 2], [420, 540, 0.45, 0.3, 3],
+      ];
+      const sparkLayer = document.getElementById("p-sparks");
+      const sparks = sparkData.map((d) => {
+        const use = document.createElementNS(SVG, "use");
+        use.setAttribute("href", "#p-spark");
+        sparkLayer.appendChild(use);
+        return { el: use, x: d[0], y: d[1], s: d[2], ph: d[3], n: d[4] };
+      });
+
+      const clouds = Array.from(document.querySelectorAll(".cloud")).map((el) => ({
+        el,
+        amp: Number(el.dataset.amp),
+        ph: Number(el.dataset.ph),
+      }));
+      const birds = Array.from(document.querySelectorAll(".bird")).map((el) => ({
+        el,
+        x: Number(el.dataset.x),
+        y: Number(el.dataset.y),
+        s: Number(el.dataset.s),
+        ph: Number(el.dataset.ph),
+      }));
+      const sun = document.getElementById("sun");
+
+      const state = { p: 0 };
+      function draw() {
+        const p = state.p;
+        ribbons.forEach((r) => drawRibbon(r, p));
+        sun.setAttribute("r", (300 + 18 * Math.sin(TAU * p)).toFixed(1));
+        clouds.forEach((c) => {
+          c.el.setAttribute("transform", "translate(" + (c.amp * Math.sin(TAU * (p + c.ph))).toFixed(1) + " 0)");
+        });
+        ripples.forEach((r) => {
+          r.el.setAttribute("stroke-dashoffset", (r.dir * r.period * p).toFixed(1));
+        });
+        birds.forEach((b) => {
+          const a = TAU * (p + b.ph);
+          const x = b.x + 90 * Math.sin(a);
+          const y = b.y + 18 * Math.sin(2 * a);
+          // Four wing beats per loop. The wing tip rises and falls around the body.
+          const tip = -9 + 9 * Math.sin(TAU * 4 * (p + b.ph));
+          const wing = 26 * b.s;
+          b.el.setAttribute(
+            "d",
+            "M" + (x - wing).toFixed(1) + " " + (y + tip * b.s).toFixed(1) +
+              " Q" + (x - wing * 0.5).toFixed(1) + " " + (y - 8 * b.s).toFixed(1) + " " + x.toFixed(1) + " " + y.toFixed(1) +
+              " Q" + (x + wing * 0.5).toFixed(1) + " " + (y - 8 * b.s).toFixed(1) + " " + (x + wing).toFixed(1) + " " + (y + tip * b.s).toFixed(1),
+          );
+        });
+        sparks.forEach((s) => {
+          const t = Math.max(0, Math.sin(TAU * (s.n * p + s.ph)));
+          const glow = t * t;
+          s.el.setAttribute(
+            "transform",
+            "translate(" + s.x + " " + s.y + ") scale(" + (s.s * (0.5 + 0.9 * glow)).toFixed(3) + ")",
+          );
+          s.el.setAttribute("opacity", (0.12 + 0.88 * glow).toFixed(3));
+        });
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(state, { p: 0 }, { p: 1, duration: 12, ease: "none", onUpdate: draw }, 0);
+      draw();
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

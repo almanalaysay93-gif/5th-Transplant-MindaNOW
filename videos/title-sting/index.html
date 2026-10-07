@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1500, height=600" />
+    <title>MindaNOW title sting</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Playfair Display";
+        font-style: normal;
+        font-weight: 700;
+        src: url("assets/PlayfairDisplay-Bold.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Playfair Display";
+        font-style: italic;
+        font-weight: 700;
+        src: url("assets/PlayfairDisplay-BoldItalic.woff2") format("woff2");
+      }
+      :root {
+        --navy: #092f59;
+        --blue-a: #0b3a78;
+        --blue-b: #2f8fd8;
+        --blue-c: #a9dcf7;
+        --gold-a: #a87522;
+        --gold-b: #d1a044;
+        --gold-c: #fff3c9;
+        --gold-ink: #7a5116;
+        --u: 1px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1500px;
+        height: 600px;
+        overflow: hidden;
+        background: transparent;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* Lockup. The website uses the same rules with --u tied to the container width. */
+      .lockup {
+        position: absolute;
+        inset: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-weight: 700;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .lk {
+        position: absolute;
+        display: block;
+      }
+      .lk-five {
+        left: calc(var(--u) * 24);
+        top: calc(var(--u) * 6);
+        width: calc(var(--u) * 380);
+        height: calc(var(--u) * 560);
+        font-size: calc(var(--u) * 500);
+        font-style: italic;
+      }
+      .lk-five::before,
+      .lk-five span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        line-height: calc(var(--u) * 560);
+        padding-left: calc(var(--u) * 20);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      /* Gold edge: the same numeral drawn behind the blue face, offset down and right. */
+      .lk-five::before {
+        content: "5";
+        background-image: linear-gradient(150deg, var(--gold-c) 0%, var(--gold-b) 35%, var(--gold-a) 62%, var(--gold-c) 82%, var(--gold-a) 100%);
+        left: calc(var(--u) * var(--edge, 9));
+        top: calc(var(--u) * var(--edge, 9));
+      }
+      .lk-five .face {
+        background-image: linear-gradient(155deg, var(--blue-a) 0%, var(--blue-b) 30%, var(--blue-c) 46%, var(--blue-b) 58%, var(--blue-a) 100%);
+        background-size: 220% 100%;
+        background-position: 0% 0%;
+      }
+      .lk-th {
+        left: calc(var(--u) * 300);
+        top: calc(var(--u) * 24);
+        font-size: calc(var(--u) * 124);
+        font-style: italic;
+        color: var(--gold-ink);
+        line-height: 1.2;
+      }
+      .lk-word {
+        left: calc(var(--u) * 452);
+        top: calc(var(--u) * 92);
+        font-size: calc(var(--u) * 186);
+        color: var(--navy);
+        line-height: 1;
+        letter-spacing: calc(var(--u) * -3);
+      }
+      .lk-name {
+        left: calc(var(--u) * 418);
+        top: calc(var(--u) * 296);
+        font-size: calc(var(--u) * 186);
+        font-style: italic;
+        color: var(--navy);
+        line-height: 1;
+        letter-spacing: calc(var(--u) * -3);
+        padding-right: calc(var(--u) * 30);
+      }
+      .lk-name .now {
+        display: inline-block;
+        padding-right: calc(var(--u) * 26);
+        background-image: linear-gradient(100deg, var(--gold-ink) 0%, var(--gold-ink) 38%, var(--gold-c) 50%, var(--gold-ink) 62%, var(--gold-ink) 100%);
+        background-size: 300% 100%;
+        background-position: 100% 0%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lk-swoosh {
+        left: calc(var(--u) * 330);
+        top: calc(var(--u) * 488);
+        width: calc(var(--u) * 1130);
+        height: calc(var(--u) * 100);
+        overflow: visible;
+      }
+      .ch {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="4.5"
+      data-width="1500"
+      data-height="600"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="4.5" data-track-index="0">
+        <div class="lockup" data-layout-allow-overflow="true">
+          <span class="lk lk-five" id="five"><span class="face" id="five-face">5</span></span>
+          <span class="lk lk-th" id="th">th</span>
+          <span class="lk lk-word" id="word">Transplant</span>
+          <span class="lk lk-name" id="name"><span id="minda">Minda</span><span class="now" id="now">NOW</span></span>
+          <svg class="lk lk-swoosh" id="swoosh" viewBox="0 0 1130 100" aria-hidden="true">
+            <defs>
+              <linearGradient id="sw-blue" x1="0" x2="1">
+                <stop offset="0" stop-color="#0b3a78" />
+                <stop offset="0.5" stop-color="#2f8fd8" />
+                <stop offset="1" stop-color="#0b3a78" stop-opacity="0.2" />
+              </linearGradient>
+              <linearGradient id="sw-gold" x1="0" x2="1">
+                <stop offset="0" stop-color="#a87522" />
+                <stop offset="0.45" stop-color="#f6e2a6" />
+                <stop offset="1" stop-color="#c7973a" stop-opacity="0.2" />
+              </linearGradient>
+            </defs>
+            <path id="sw-b" d="M6 58 C220 96 470 92 700 50 C860 22 1010 18 1124 40" fill="none" stroke="url(#sw-blue)" stroke-width="13" stroke-linecap="round" />
+            <path id="sw-g" d="M30 74 C260 104 500 96 730 60 C880 38 1020 36 1118 58" fill="none" stroke="url(#sw-gold)" stroke-width="6" stroke-linecap="round" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Split a text node into per-letter spans so each letter can rise on its own.
+      function split(id) {
+        const el = document.getElementById(id);
+        const text = el.textContent;
+        el.textContent = "";
+        return Array.from(text).map((letter) => {
+          const span = document.createElement("span");
+          span.className = "ch";
+          span.textContent = letter;
+          el.appendChild(span);
+          return span;
+        });
+      }
+      const wordLetters = split("word");
+      const mindaLetters = split("minda");
+
+      const blue = document.getElementById("sw-b");
+      const gold = document.getElementById("sw-g");
+      const blueLen = blue.getTotalLength();
+      const goldLen = gold.getTotalLength();
+      blue.style.strokeDasharray = blueLen;
+      gold.style.strokeDasharray = goldLen;
+
+      const tl = gsap.timeline({ paused: true });
+
+      // The numeral lands first: it rises, settles, and the gold edge slides out from behind it.
+      tl.fromTo("#five", { opacity: 0, y: 70, scale: 0.72, rotation: -9, transformOrigin: "40% 70%" }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.9, ease: "back.out(1.5)" }, 0.1);
+      tl.fromTo("#five", { "--edge": 0 }, { "--edge": 9, duration: 0.6, ease: "power3.out" }, 0.55);
+      tl.fromTo("#five-face", { backgroundPosition: "0% 0%" }, { backgroundPosition: "100% 0%", duration: 1.5, ease: "power2.inOut" }, 0.5);
+      tl.fromTo("#th", { opacity: 0, y: 34, scale: 0.6, transformOrigin: "0% 100%" }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2.2)" }, 0.65);
+
+      // Title words: letters rise in sequence.
+      tl.fromTo(wordLetters, { opacity: 0, y: 64, rotation: 7 }, { opacity: 1, y: 0, rotation: 0, duration: 0.6, ease: "power3.out", stagger: 0.045 }, 0.85);
+      tl.fromTo(mindaLetters, { opacity: 0, y: 64, rotation: 7 }, { opacity: 1, y: 0, rotation: 0, duration: 0.6, ease: "power3.out", stagger: 0.05 }, 1.35);
+      tl.fromTo("#now", { opacity: 0, x: -46, scale: 1.25, transformOrigin: "0% 60%" }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.8)" }, 1.7);
+      tl.fromTo("#now", { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 1.1, ease: "power1.inOut" }, 2.15);
+
+      // Ribbon underline draws from left to right.
+      tl.fromTo(blue, { strokeDashoffset: blueLen }, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" }, 2.0);
+      tl.fromTo(gold, { strokeDashoffset: goldLen }, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" }, 2.2);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

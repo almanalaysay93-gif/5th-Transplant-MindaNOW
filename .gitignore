@@ -1,0 +1,6 @@
+node_modules/
+videos/*/renders/
+videos/*/snapshots/
+preview/*.jpeg
+preview/*.jpg
+preview/*.txt

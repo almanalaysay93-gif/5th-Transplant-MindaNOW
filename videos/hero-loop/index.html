@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>MindaNOW hero loop</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --sky-top: #bfdcf3;
+        --sky-mid: #e9f4fb;
+        --sky-warm: #fff5df;
+        --navy: #0b3a78;
+        --blue: #2f8fd8;
+        --ice: #a9dcf7;
+        --gold: #c7973a;
+        --gold-light: #f6e2a6;
+        --cream: #fffaf0;
+        --ridge: #9cc3df;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--sky-mid);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+      }
+      #sky {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 60% 55% at 70% 48%, var(--cream) 0%, transparent 70%),
+          linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 46%, var(--sky-warm) 100%);
+      }
+      #rays {
+        position: absolute;
+        left: 244px;
+        top: -580px;
+        width: 2200px;
+        height: 2200px;
+        background: repeating-conic-gradient(
+          from 0deg,
+          rgba(255, 255, 255, 0) 0deg,
+          rgba(255, 255, 255, 0.5) 5deg,
+          rgba(255, 244, 214, 0.34) 9deg,
+          rgba(255, 255, 255, 0) 14deg,
+          rgba(255, 255, 255, 0) 20deg
+        );
+        -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.55) 22%, transparent 52%);
+        mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.55) 22%, transparent 52%);
+      }
+      #art {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="16"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="16" data-track-index="0">
+        <div id="sky"></div>
+        <div id="rays" data-layout-allow-overflow="true"></div>
+        <svg id="art" data-layout-allow-overflow="true" viewBox="0 0 1920 1080" aria-hidden="true">
+          <defs>
+            <radialGradient id="g-bloom">
+              <stop offset="0" stop-color="#fffdf4" stop-opacity="1" />
+              <stop offset="0.35" stop-color="#ffefc4" stop-opacity="0.62" />
+              <stop offset="1" stop-color="#ffefc4" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="g-blue" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#0b3a78" />
+              <stop offset="0.28" stop-color="#2f8fd8" />
+              <stop offset="0.5" stop-color="#a9dcf7" />
+              <stop offset="0.72" stop-color="#1c6fc0" />
+              <stop offset="1" stop-color="#0b3a78" />
+            </linearGradient>
+            <linearGradient id="g-gold" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#b07f28" />
+              <stop offset="0.3" stop-color="#f6e2a6" />
+              <stop offset="0.52" stop-color="#fff7da" />
+              <stop offset="0.76" stop-color="#d1a044" />
+              <stop offset="1" stop-color="#a87522" />
+            </linearGradient>
+            <linearGradient id="g-ice" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#d7eefb" stop-opacity="0.2" />
+              <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.85" />
+              <stop offset="1" stop-color="#bfe2f6" stop-opacity="0.2" />
+            </linearGradient>
+            <linearGradient id="g-ridge-far" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#9cc3df" stop-opacity="0.75" />
+              <stop offset="1" stop-color="#e9f4fb" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="g-ridge-near" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#6fa5cc" stop-opacity="0.7" />
+              <stop offset="1" stop-color="#fff5df" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="g-mist" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#fffaf0" stop-opacity="0" />
+              <stop offset="1" stop-color="#fffaf0" stop-opacity="0.95" />
+            </linearGradient>
+            <filter id="f-cloud" x="-20%" y="-40%" width="140%" height="180%">
+              <feGaussianBlur stdDeviation="16" />
+            </filter>
+            <filter id="f-soft" x="-10%" y="-60%" width="120%" height="220%">
+              <feGaussianBlur stdDeviation="5" />
+            </filter>
+            <path id="spark" d="M0 -16 C1.6 -4 4 -1.6 16 0 C4 1.6 1.6 4 0 16 C-1.6 4 -4 1.6 -16 0 C-4 -1.6 -1.6 -4 0 -16Z" />
+            <path id="plus" d="M-9 -28 H9 V-9 H28 V9 H9 V28 H-9 V9 H-28 V-9 H-9Z" />
+          </defs>
+
+          <circle id="bloom" cx="1344" cy="520" r="470" fill="url(#g-bloom)" />
+
+          <g id="clouds" filter="url(#f-cloud)" fill="#ffffff">
+            <g class="cloud" data-amp="46" data-ph="0" opacity="0.9">
+              <ellipse cx="250" cy="150" rx="210" ry="46" />
+              <ellipse cx="330" cy="118" rx="120" ry="50" />
+              <ellipse cx="180" cy="128" rx="90" ry="36" />
+            </g>
+            <g class="cloud" data-amp="34" data-ph="0.3" opacity="0.8">
+              <ellipse cx="930" cy="96" rx="250" ry="38" />
+              <ellipse cx="1010" cy="70" rx="120" ry="40" />
+            </g>
+            <g class="cloud" data-amp="52" data-ph="0.62" opacity="0.92">
+              <ellipse cx="1650" cy="190" rx="230" ry="50" />
+              <ellipse cx="1570" cy="154" rx="130" ry="52" />
+              <ellipse cx="1740" cy="160" rx="100" ry="38" />
+            </g>
+            <g class="cloud" data-amp="28" data-ph="0.8" opacity="0.7">
+              <ellipse cx="560" cy="330" rx="180" ry="26" />
+              <ellipse cx="1240" cy="250" rx="150" ry="22" />
+            </g>
+          </g>
+
+          <g id="pluses" fill="#ffffff">
+            <use class="plus" href="#plus" data-x="120" data-y="520" data-s="1.5" data-ph="0" />
+            <use class="plus" href="#plus" data-x="232" data-y="640" data-s="1" data-ph="0.35" />
+            <use class="plus" href="#plus" data-x="96" data-y="740" data-s="0.8" data-ph="0.7" />
+            <use class="plus" href="#plus" data-x="1810" data-y="560" data-s="1.1" data-ph="0.5" />
+          </g>
+
+          <path
+            d="M0 860 L150 800 L290 838 L420 742 L500 700 L560 722 L650 690 L760 772 L900 820 L1040 850 L1240 862 L1420 820 L1560 746 L1640 690 L1700 664 L1760 690 L1840 720 L1920 700 V1080 H0Z"
+            fill="url(#g-ridge-far)"
+          />
+          <path
+            d="M0 930 L180 880 L360 904 L520 850 L700 900 L920 930 L1180 938 L1380 900 L1540 860 L1700 890 L1920 850 V1080 H0Z"
+            fill="url(#g-ridge-near)"
+          />
+
+          <path id="rb-ice" fill="url(#g-ice)" />
+          <path id="rb-blue-back" fill="url(#g-blue)" opacity="0.55" />
+          <path id="rb-gold" fill="url(#g-gold)" />
+          <path id="rb-gold-hi" fill="none" stroke="#fffbe8" stroke-width="2.5" stroke-opacity="0.8" />
+          <path id="rb-blue" fill="url(#g-blue)" />
+          <path id="rb-blue-hi" fill="none" stroke="#e4f5ff" stroke-width="2.5" stroke-opacity="0.75" />
+          <path id="rb-gold-thin" fill="url(#g-gold)" opacity="0.9" />
+
+          <rect x="0" y="900" width="1920" height="180" fill="url(#g-mist)" />
+
+          <g id="sparks" fill="#fffdf2"></g>
+        </svg>
+      </div>
+    </div>
+    <script>
+      const TAU = Math.PI * 2;
+      const W = 1920;
+
+      // Ribbon: a band between two travelling sine edges. All speeds are whole
+      // cycles per loop, so frame 0 equals the last frame.
+      const ribbons = [
+        { id: "rb-ice", y: 640, tilt: -0.06, amp: 90, k: 0.0026, ph: 1.2, sp: 1, w: 70, wk: 0.0031, wph: 0.4, wsp: -1 },
+        { id: "rb-blue-back", y: 800, tilt: -0.1, amp: 70, k: 0.0033, ph: 2.6, sp: -1, w: 38, wk: 0.004, wph: 2.0, wsp: 1 },
+        { id: "rb-gold", hi: "rb-gold-hi", y: 870, tilt: -0.12, amp: 84, k: 0.003, ph: 0.2, sp: 1, w: 34, wk: 0.0046, wph: 1.1, wsp: 1 },
+        { id: "rb-blue", hi: "rb-blue-hi", y: 930, tilt: -0.09, amp: 96, k: 0.0028, ph: 3.6, sp: 1, w: 52, wk: 0.0038, wph: 0.0, wsp: -1 },
+        { id: "rb-gold-thin", y: 990, tilt: -0.05, amp: 60, k: 0.0036, ph: 5.0, sp: -1, w: 12, wk: 0.005, wph: 3.0, wsp: 1 },
+      ];
+      ribbons.forEach((r) => {
+        r.el = document.getElementById(r.id);
+        r.hiEl = r.hi ? document.getElementById(r.hi) : null;
+      });
+
+      function drawRibbon(r, p) {
+        const top = [];
+        const bottom = [];
+        for (let x = -60; x <= W + 60; x += 24) {
+          const yc =
+            r.y +
+            r.tilt * x +
+            r.amp * Math.sin(r.k * x + r.ph + TAU * r.sp * p) +
+            r.amp * 0.32 * Math.sin(r.k * 2.3 * x + r.ph * 1.7 - TAU * r.sp * p);
+          const half = r.w * (0.56 + 0.44 * Math.sin(r.wk * x + r.wph + TAU * r.wsp * p));
+          top.push(x.toFixed(1) + " " + (yc - half).toFixed(1));
+          bottom.push(x.toFixed(1) + " " + (yc + half).toFixed(1));
+        }
+        r.el.setAttribute("d", "M" + top.join(" L") + " L" + bottom.reverse().join(" L") + "Z");
+        if (r.hiEl) r.hiEl.setAttribute("d", "M" + top.join(" L"));
+      }
+
+      // Fixed sparkle field. Values are literals, not random, so every render matches.
+      const sparkData = [
+        [1180, 250, 1.1, 0.0, 2], [1500, 300, 0.7, 0.3, 3], [1420, 180, 0.5, 0.6, 2], [1610, 470, 0.9, 0.15, 2],
+        [1090, 430, 0.6, 0.8, 3], [1250, 700, 0.8, 0.45, 2], [1540, 660, 0.55, 0.7, 3], [980, 610, 0.45, 0.25, 2],
+        [1720, 330, 0.5, 0.9, 2], [840, 300, 0.4, 0.55, 3], [1380, 800, 0.6, 0.1, 2], [700, 760, 0.5, 0.65, 2],
+        [420, 560, 0.45, 0.35, 3], [1840, 760, 0.6, 0.5, 2],
+      ];
+      const sparkLayer = document.getElementById("sparks");
+      const sparks = sparkData.map((d) => {
+        const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        use.setAttribute("href", "#spark");
+        sparkLayer.appendChild(use);
+        return { el: use, x: d[0], y: d[1], s: d[2], ph: d[3], n: d[4] };
+      });
+
+      const clouds = Array.from(document.querySelectorAll(".cloud")).map((el) => ({
+        el,
+        amp: Number(el.dataset.amp),
+        ph: Number(el.dataset.ph),
+      }));
+      const pluses = Array.from(document.querySelectorAll(".plus")).map((el) => ({
+        el,
+        x: Number(el.dataset.x),
+        y: Number(el.dataset.y),
+        s: Number(el.dataset.s),
+        ph: Number(el.dataset.ph),
+      }));
+      const rays = document.getElementById("rays");
+      const bloom = document.getElementById("bloom");
+
+      const state = { p: 0 };
+      function draw() {
+        const p = state.p;
+        ribbons.forEach((r) => drawRibbon(r, p));
+        // The ray pattern repeats every 20 degrees, so a 20 degree turn is seamless.
+        rays.style.transform = "rotate(" + (20 * p).toFixed(3) + "deg)";
+        bloom.setAttribute("r", (470 + 26 * Math.sin(TAU * p)).toFixed(1));
+        clouds.forEach((c) => {
+          c.el.setAttribute("transform", "translate(" + (c.amp * Math.sin(TAU * (p + c.ph))).toFixed(1) + " 0)");
+        });
+        pluses.forEach((q) => {
+          const dy = 16 * Math.sin(TAU * (p + q.ph));
+          q.el.setAttribute("transform", "translate(" + q.x + " " + (q.y + dy).toFixed(1) + ") scale(" + q.s + ")");
+          q.el.setAttribute("opacity", (0.42 + 0.14 * Math.sin(TAU * (p + q.ph))).toFixed(3));
+        });
+        sparks.forEach((s) => {
+          const t = Math.max(0, Math.sin(TAU * (s.n * p + s.ph)));
+          const glow = t * t;
+          s.el.setAttribute(
+            "transform",
+            "translate(" + s.x + " " + s.y + ") rotate(" + (18 * glow).toFixed(1) + ") scale(" + (s.s * (0.5 + 0.9 * glow)).toFixed(3) + ")",
+          );
+          s.el.setAttribute("opacity", (0.12 + 0.88 * glow).toFixed(3));
+        });
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(state, { p: 0 }, { p: 1, duration: 16, ease: "none", onUpdate: draw }, 0);
+      draw();
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

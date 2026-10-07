@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>MindaNOW register loop</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #edf4f8;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 50% 60% at 30% 50%, #fffaf0 0%, transparent 72%),
+          linear-gradient(135deg, #d3e8f5 0%, #edf4f8 48%, #fdf4df 100%);
+      }
+      #art {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="12" data-track-index="0">
+        <svg id="art" data-layout-allow-overflow="true" viewBox="0 0 1920 1080" aria-hidden="true">
+          <defs>
+            <radialGradient id="r-bloom">
+              <stop offset="0" stop-color="#fffdf4" />
+              <stop offset="0.4" stop-color="#ffefc4" stop-opacity="0.55" />
+              <stop offset="1" stop-color="#ffefc4" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="r-blue" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#0b3a78" />
+              <stop offset="0.3" stop-color="#2f8fd8" />
+              <stop offset="0.52" stop-color="#a9dcf7" />
+              <stop offset="0.76" stop-color="#1c6fc0" />
+              <stop offset="1" stop-color="#0b3a78" />
+            </linearGradient>
+            <linearGradient id="r-gold" x1="1" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#b07f28" />
+              <stop offset="0.3" stop-color="#f6e2a6" />
+              <stop offset="0.52" stop-color="#fff7da" />
+              <stop offset="0.76" stop-color="#d1a044" />
+              <stop offset="1" stop-color="#a87522" />
+            </linearGradient>
+            <linearGradient id="r-ice" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0.9" />
+              <stop offset="1" stop-color="#bfe2f6" stop-opacity="0.35" />
+            </linearGradient>
+            <path id="r-spark" d="M0 -16 C1.6 -4 4 -1.6 16 0 C4 1.6 1.6 4 0 16 C-1.6 4 -4 1.6 -16 0 C-4 -1.6 -1.6 -4 0 -16Z" />
+            <path id="r-plus" d="M-9 -28 H9 V-9 H28 V9 H9 V28 H-9 V9 H-28 V-9 H-9Z" />
+          </defs>
+
+          <circle id="bloom" cx="600" cy="540" r="430" fill="url(#r-bloom)" />
+
+          <g id="pluses" fill="#ffffff">
+            <use class="plus" href="#r-plus" data-x="1500" data-y="210" data-s="1.5" data-ph="0" />
+            <use class="plus" href="#r-plus" data-x="1640" data-y="330" data-s="0.9" data-ph="0.35" />
+            <use class="plus" href="#r-plus" data-x="1730" data-y="840" data-s="1.2" data-ph="0.7" />
+            <use class="plus" href="#r-plus" data-x="150" data-y="900" data-s="1" data-ph="0.5" />
+          </g>
+
+          <path id="ring-ice" fill="url(#r-ice)" />
+          <path id="ring-blue" fill="url(#r-blue)" />
+          <path id="ring-gold" fill="url(#r-gold)" />
+          <path id="ring-blue-thin" fill="url(#r-blue)" opacity="0.7" />
+          <path id="ring-gold-thin" fill="url(#r-gold)" opacity="0.85" />
+
+          <g id="sparks" fill="#fffdf2"></g>
+        </svg>
+      </div>
+    </div>
+    <script>
+      const TAU = Math.PI * 2;
+      const SVG = "http://www.w3.org/2000/svg";
+
+      // Orbit ring: a closed band around an ellipse. The band width travels
+      // around the ring a whole number of lobes per loop, which reads as a
+      // ribbon that turns in depth, and the ring tilt sways and returns.
+      const rings = [
+        { id: "ring-ice", cx: 600, cy: 540, rx: 470, ry: 300, tilt: -18, sway: 5, w: 54, lobes: 2, sp: 1, ph: 0.0 },
+        { id: "ring-blue", cx: 600, cy: 540, rx: 400, ry: 210, tilt: 24, sway: 7, w: 30, lobes: 2, sp: -1, ph: 0.2 },
+        { id: "ring-gold", cx: 600, cy: 540, rx: 330, ry: 250, tilt: -42, sway: 6, w: 20, lobes: 3, sp: 1, ph: 0.55 },
+        { id: "ring-blue-thin", cx: 600, cy: 540, rx: 560, ry: 360, tilt: 8, sway: 4, w: 8, lobes: 2, sp: 1, ph: 0.4 },
+        { id: "ring-gold-thin", cx: 600, cy: 540, rx: 250, ry: 150, tilt: 60, sway: 8, w: 7, lobes: 2, sp: -1, ph: 0.8 },
+      ];
+      rings.forEach((r) => {
+        r.el = document.getElementById(r.id);
+      });
+      function drawRing(r, p) {
+        const rot = ((r.tilt + r.sway * Math.sin(TAU * (p + r.ph))) * Math.PI) / 180;
+        const cos = Math.cos(rot);
+        const sin = Math.sin(rot);
+        const outer = [];
+        const inner = [];
+        const steps = 120;
+        for (let i = 0; i <= steps; i++) {
+          const a = (i / steps) * TAU;
+          const half = r.w * (0.14 + 0.86 * Math.pow(Math.sin(r.lobes * a * 0.5 + Math.PI * r.sp * p + r.ph), 2));
+          const ca = Math.cos(a);
+          const sa = Math.sin(a);
+          const ox = (r.rx + half) * ca;
+          const oy = (r.ry + half) * sa;
+          const ix = (r.rx - half) * ca;
+          const iy = (r.ry - half) * sa;
+          outer.push((r.cx + ox * cos - oy * sin).toFixed(1) + " " + (r.cy + ox * sin + oy * cos).toFixed(1));
+          inner.push((r.cx + ix * cos - iy * sin).toFixed(1) + " " + (r.cy + ix * sin + iy * cos).toFixed(1));
+        }
+        r.el.setAttribute("d", "M" + outer.join(" L") + "Z M" + inner.reverse().join(" L") + "Z");
+        r.el.setAttribute("fill-rule", "evenodd");
+      }
+
+      const sparkData = [
+        [600, 200, 1.0, 0.0, 2], [980, 420, 0.7, 0.3, 3], [240, 380, 0.6, 0.6, 2], [860, 780, 0.8, 0.15, 2],
+        [330, 760, 0.5, 0.8, 3], [1180, 250, 0.55, 0.45, 2], [1340, 640, 0.6, 0.7, 3], [1560, 520, 0.5, 0.25, 2],
+        [1100, 900, 0.5, 0.9, 2], [1800, 160, 0.45, 0.55, 3], [120, 180, 0.5, 0.1, 2], [1420, 940, 0.4, 0.65, 2],
+      ];
+      const sparkLayer = document.getElementById("sparks");
+      const sparks = sparkData.map((d) => {
+        const use = document.createElementNS(SVG, "use");
+        use.setAttribute("href", "#r-spark");
+        sparkLayer.appendChild(use);
+        return { el: use, x: d[0], y: d[1], s: d[2], ph: d[3], n: d[4] };
+      });
+      const pluses = Array.from(document.querySelectorAll(".plus")).map((el) => ({
+        el,
+        x: Number(el.dataset.x),
+        y: Number(el.dataset.y),
+        s: Number(el.dataset.s),
+        ph: Number(el.dataset.ph),
+      }));
+      const bloom = document.getElementById("bloom");
+
+      const state = { p: 0 };
+      function draw() {
+        const p = state.p;
+        rings.forEach((r) => drawRing(r, p));
+        bloom.setAttribute("r", (430 + 24 * Math.sin(TAU * p)).toFixed(1));
+        pluses.forEach((q) => {
+          const dy = 16 * Math.sin(TAU * (p + q.ph));
+          q.el.setAttribute("transform", "translate(" + q.x + " " + (q.y + dy).toFixed(1) + ") scale(" + q.s + ")");
+          q.el.setAttribute("opacity", (0.5 + 0.16 * Math.sin(TAU * (p + q.ph))).toFixed(3));
+        });
+        sparks.forEach((s) => {
+          const t = Math.max(0, Math.sin(TAU * (s.n * p + s.ph)));
+          const glow = t * t;
+          s.el.setAttribute(
+            "transform",
+            "translate(" + s.x + " " + s.y + ") rotate(" + (18 * glow).toFixed(1) + ") scale(" + (s.s * (0.5 + 0.9 * glow)).toFixed(3) + ")",
+          );
+          s.el.setAttribute("opacity", (0.12 + 0.88 * glow).toFixed(3));
+        });
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(state, { p: 0 }, { p: 1, duration: 12, ease: "none", onUpdate: draw }, 0);
+      draw();
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
