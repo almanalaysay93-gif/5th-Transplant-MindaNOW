@@ -1,7 +1,7 @@
 # 5th Transplant MindaNOW registration site
 
 This repository holds the event registration page for the 5th Transplant MindaNOW.
-The event date is November 5, 2026.
+The event date is November 4, 2026.
 The venue is the Mahogany Room, JICA Building (JICA OPD Building), Southern Philippines Medical Center, Davao City.
 
 ## Folders

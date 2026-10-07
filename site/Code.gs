@@ -162,7 +162,7 @@ function deliver_(sheet, rowNumber, row, onlyColumn) {
   const name = raw_(row[2]) + ' ' + raw_(row[3]);
   const details = 'Reference: ' + row[1] + '\nName: ' + name + '\nProfession: ' + raw_(row[6]) +
     '\nInstitution / Organization: ' + raw_(row[7]) + '\nCity / Province: ' + raw_(row[8]);
-  const pending = '\n\nEvent date: November 5, 2026.\nVenue: Mahogany Room, JICA Building (JICA OPD Building), Southern Philippines Medical Center, Davao City.\nThe program is subject to confirmation.';
+  const pending = '\n\nEvent date: November 4, 2026.\nVenue: Mahogany Room, JICA Building (JICA OPD Building), Southern Philippines Medical Center, Davao City.\nThe program is subject to confirmation.';
   const messages = [
     { column: 11, to: guestEmail, subject: 'RSVP received | ' + CONFIG_.eventName,
       body: 'Hello ' + name + ',\n\nWe received your registration for ' + CONFIG_.eventName + '.\n\n' + details + pending +
