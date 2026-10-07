@@ -655,6 +655,8 @@
           }
           if (!response.reference) {
             showResult('', 'Request received', 'If this email address is registered, check your inbox and spam folder for your RSVP confirmation. Contact the organizer if you need help.');
+          } else if (response.emailStatus === 'queued') {
+            showResult('', 'You are registered', 'Your RSVP confirmation email arrives in a few minutes. Check your inbox and spam folder. The venue is the Mahogany Room, JICA Building, Southern Philippines Medical Center, Davao City.', response.reference);
           } else if (response.emailStatus === 'sent') {
             showResult('', 'You are registered', 'Your RSVP confirmation has been sent. Check your inbox and spam folder. The venue is the Mahogany Room, JICA Building, Southern Philippines Medical Center, Davao City.', response.reference);
           } else {

@@ -45,12 +45,40 @@ function registerGuest(payload) {
     sheet.appendRow(row.map(safeCell_));
     SpreadsheetApp.flush();
     const rowNumber = sheet.getLastRow();
-    // A saved registration stays successful even when mail or status updates fail.
+    // The reply does not wait for email. A one-time trigger sends the two emails about a minute later.
+    // A saved registration stays successful even when the trigger or the mail fails.
+    if (queueEmailRun_()) return { ok: true, reference: reference, emailStatus: 'queued' };
     try { deliver_(sheet, rowNumber, row); } catch (error) { console.warn('Email queue remains pending.'); }
     return { ok: true, reference: reference, emailStatus: row[11] === 'sent' ? 'sent' : 'pending' };
   } finally {
     lock.releaseLock();
   }
+}
+
+// Schedules one email run. Returns false when it cannot, and the caller then sends the email at once.
+// The hourly retry trigger still covers every row that stays pending.
+function queueEmailRun_() {
+  try {
+    const properties = PropertiesService.getScriptProperties();
+    const queuedAt = Number(properties.getProperty('emailRunQueuedAt')) || 0;
+    // A run that was scheduled in the last 2 minutes has not started, so it also sends this row.
+    if (Date.now() - queuedAt < 120000) return true;
+    ScriptApp.newTrigger('sendQueuedEmails_').timeBased().after(1000).create();
+    properties.setProperty('emailRunQueuedAt', String(Date.now()));
+    return true;
+  } catch (error) {
+    console.warn('Email run was not scheduled.');
+    return false;
+  }
+}
+
+function sendQueuedEmails_() {
+  // Clear the marker first, so a registration that arrives during this run schedules a new run.
+  PropertiesService.getScriptProperties().deleteProperty('emailRunQueuedAt');
+  ScriptApp.getProjectTriggers().forEach(function (trigger) {
+    if (trigger.getHandlerFunction() === 'sendQueuedEmails_') ScriptApp.deleteTrigger(trigger);
+  });
+  retryPendingEmails_();
 }
 
 function validate_(payload) {
