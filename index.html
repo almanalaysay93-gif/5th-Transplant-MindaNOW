@@ -227,8 +227,6 @@
       .wrap{width:calc(100% - 44px)}
       .hero-grid{gap:10px}
       .stage{min-height:410px;height:410px}
-      .event-facts{grid-template-columns:1fr 1fr}
-      .fact.wide{grid-column:1/-1}
       .pillar-grid{grid-template-columns:1fr 1fr}
       .registration-grid{gap:30px}
       .form-card{padding:26px}
@@ -245,20 +243,41 @@
       .nav-links{gap:0}
       .nav-links>a:not(.button){display:none}
       .nav-links .button{padding:9px 14px;font-size:13px}
-      .hero-scrim{background:linear-gradient(180deg,rgba(252,251,247,.93) 0%,rgba(252,251,247,.82) 52%,rgba(252,251,247,.1) 78%,rgba(252,251,247,.85) 100%)}
-      .hero-grid{grid-template-columns:1fr;min-height:0;padding-top:34px;padding-bottom:64px;gap:0}
+      /* Phone hero. The copy wrapper dissolves, so the kidney art can sit right under the title. */
+      .hero-scrim{background:linear-gradient(180deg,rgba(252,251,247,.9) 0%,rgba(252,251,247,.74) 22%,rgba(252,251,247,.74) 46%,rgba(252,251,247,.9) 58%,rgba(252,251,247,.92) 100%)}
+      .hero-grid{grid-template-columns:1fr;min-height:0;padding-top:26px;padding-bottom:36px;gap:0}
+      .hero-copy{display:contents}
+      .hero-copy>.eyebrow{order:1;margin-bottom:10px}
+      .hero h1{order:2}
+      .stage{order:3}
+      .theme-label{order:4}
+      .theme{order:5}
+      .hero-intro{order:6}
+      .hero-actions{order:7;flex-direction:column;align-items:stretch;gap:4px}
+      .hero-actions .button{width:100%}
+      .hero-actions .text-link{text-align:center}
+      .event-facts{order:8}
+      .fact dt,.theme-label,.status-tag{font-size:11px}
+      .fact dd{font-size:14px}
+      .brand{min-height:44px}
+      .contact-note a{display:inline-block;padding:10px 0}
       .hero .loop video{object-position:74% 50%}
-      .stage{height:290px;min-height:290px;width:min(100%,430px);margin:18px auto 0;transform:none}
-      .hero-copy{transform:none}
+      .stage{height:clamp(230px,70vw,300px);min-height:0;width:min(100%,430px);margin:0 auto 6px;transform:none}
       .art{width:112%;left:-6%}
       .theme{font-size:19px}
       .hero h1{margin-bottom:10px}
       .hero-actions{gap:14px}
       .event-facts{margin-top:26px}
       .pillars{padding:38px 0 42px}
-      .pillar-grid{gap:12px}
-      .pillar{padding:20px 16px}
-      .banner{height:auto;padding:54px 0 46px}
+      .pillar-grid{gap:10px}
+      .pillar{padding:16px 14px 15px;border-radius:12px}
+      .pillar-icon{width:44px;height:44px;margin-bottom:12px}
+      .pillar-icon svg{width:22px;height:22px}
+      .pillar h3{font-size:16px}
+      .pillar p{font-size:12.5px;line-height:1.5;margin-top:6px}
+      .banner{height:auto;padding:46px 0 40px}
+      .banner:after{background:linear-gradient(180deg,rgba(255,255,255,.8) 0,rgba(255,255,255,.72) 62%,#fff 100%)}
+      .banner p{font-size:14px}
       .banner .wrap{transform:none}
       .program{padding-bottom:52px}
       .session summary{padding:18px 17px;gap:14px}
@@ -279,10 +298,8 @@
     @media(max-width:400px){
       .form-grid{grid-template-columns:1fr}
       .field.full{grid-column:1}
-      .pillar-grid{grid-template-columns:1fr}
-      .event-facts{grid-template-columns:1fr}
       .brand-mark{display:none}
-      .stage{height:250px;min-height:250px}
+      .brand-text small{display:none}
     }
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}
